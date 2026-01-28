@@ -1,0 +1,25 @@
+name: "Upstreaming dashboard generator"
+description: "Generate snippets to build a upstreaming dashboard for a Lean project"
+inputs:
+  website-directory:
+    description: "Website directory. Files will be generated under {website-dir}/_includes/_upstreaming_dashboard"
+    required: true
+    default: "."
+  include-drafts:
+    description: "Include draft PRs in the ready-to-upstream list"
+    required: false
+    default: "false"
+  relevant-labels:
+    description: "Comma or newline-separated list of labels used to group PRs into Selected/Other"
+    required: false
+    default: ""
+  branch-name:
+    description: "Branch name used to build source links"
+    required: false
+    default: "main"
+  project-name:
+    description: "Name of the project. This will define the namespace we assume to find imports (import P.*), and the corresponding root to find upstream candidates (P/Mathlib)"
+    required: true
+runs:
+  using: "node20"
+  main: "src/index.js"
