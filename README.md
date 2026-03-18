@@ -46,6 +46,46 @@ node scripts/run-local.js \
 
 This preserves `src/index.js` as the action entrypoint. Relative output paths are resolved from `--input-directory`, and if `--repo-url` is omitted the wrapper tries to infer it from the input repository's `origin` remote. The script still fetches open PR data from the queueboard service, so local runs require network access.
 
+### Step-by-step example
+1. Put your upstreaming candidates in paths matching the corresponding `Mathlib` files.
+
+   For example, if you eventually want to upstream to `Mathlib/Algebra/MyLemma.lean`, keep the downstream file at that same path in your repository.
+
+2. Create a GitHub Pages page that includes the generated dashboard.
+
+   For example, if your site lives in `website`, create `website/index.md` containing:
+
+   ```md
+   ---
+   layout: default
+   title: Dashboard
+   ---
+
+   {% include _upstreaming_dashboard/dashboard.md %}
+   ```
+
+3. Add a GitHub Actions workflow that checks out the repository, runs this action, and then builds and deploys your Jekyll site.
+
+4. Configure the inputs for your project.
+
+   - Set `website-directory` to the directory containing your Jekyll site.
+   - Set `project-name` to the namespace used by your project, for example `MyProject`.
+   - Optionally set `relevant-labels` if you want PRs grouped into "Selected" and "Other".
+
+   For example (again, the site here is under the `website` directory):
+   ```yaml
+         - name: Generate upstream dashboard snippets
+           uses: leanprover-community/upstreaming-dashboard-action@main
+           with:
+             website-directory: website
+             project-name: MyProject
+             relevant-labels: t-algebra
+   ```
+
+
+5. After the workflow runs, the action will write the generated markdown files under `{website-directory}/_includes/_upstreaming_dashboard`, and your Pages site will render them as per step 2 above.
+
+
 ## Notes
 - The current version of the task is designed for projects that upstream to `leanprover-community/mathlib4`. Support for generic projects could be implemented in a future version.
 - Links in the generated markdown use the `branch-name` input (defaults to `main`).
