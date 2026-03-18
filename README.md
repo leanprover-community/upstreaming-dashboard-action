@@ -32,6 +32,20 @@ The following files are generated under `{website-directory}/_includes/_upstream
 ## Usage
 The files are intended for direct inclusion in a Github Pages page using the Jekyll site generator. The simplest way to consume the dashboard is to add `{% include _upstreaming_dashboard/dashboard.md %}` as the body of one of the pages, but the finer-grained snippets described above are provided for customizability (also see below for a note on CSS styling).
 
+## Local execution
+You can run the generator locally through the wrapper script in `scripts/run-local.js`. It runs the action from the given input directory, stages output through a temporary website directory, and then copies the generated dashboard files directly into your chosen output directory:
+
+```sh
+node scripts/run-local.js \
+  --input-directory /path/to/project \
+  --project-name Batteries \
+  --output-directory website/_includes/_upstreaming_dashboard \
+  --branch-name main \
+  --relevant-labels "maintainer merge,delegated"
+```
+
+This preserves `src/index.js` as the action entrypoint. Relative output paths are resolved from `--input-directory`, and if `--repo-url` is omitted the wrapper tries to infer it from the input repository's `origin` remote. The script still fetches open PR data from the queueboard service, so local runs require network access.
+
 ## Notes
 - The current version of the task is designed for projects that upstream to `leanprover-community/mathlib4`. Support for generic projects could be implemented in a future version.
 - Links in the generated markdown use the `branch-name` input (defaults to `main`).
