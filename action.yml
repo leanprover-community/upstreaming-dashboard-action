@@ -18,8 +18,12 @@ inputs:
     required: false
     default: "main"
   project-name:
-    description: "Name of the project. This will define the namespace we assume to find imports (import P.*), and the corresponding root to find upstream candidates (P/Mathlib)"
+    description: "Name of the project. This will define the namespace we assume to find imports (import P.*), and the corresponding root to find upstream candidates (P/Mathlib by default, see search-root)"
     required: true
+  search-root:
+    description: "Namespace under which upstreaming candidates are located (e.g. MyProject.ToMathlib). Defaults to <project-name>.Mathlib."
+    required: false
+    default: ""
 runs:
   using: "node20"
   main: "src/index.js"

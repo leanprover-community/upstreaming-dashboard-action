@@ -3,6 +3,8 @@ Projects that depend on `Mathlib` will typically want to contribute some files i
 
 For this action to work, the 'downstream' repository must follow the same directory and filename structure as Mathlib for their upstreaming candidates. Thus if a downstream developer has results which they plan to upstream to the Mathlib file `A/B/C.lean`, they should create a file `Mathlib/A/B/C.lean` under their project directory. The dashboard will then highlight any open PRs to the Mathlib repository containing the corresponding file.
 
+By default the action looks under `<project-name>/Mathlib/` for upstreaming candidates. Projects that use a different local namespace (e.g. `Carleson/ToMathlib/`) can point the action at it via the `search-root` input. Files under that root are still mapped to the corresponding `Mathlib/...` paths for PR matching.
+
 ## Inputs
 | Name | Required | Default | Description |
 | --- | --- | --- | --- |
@@ -11,6 +13,7 @@ For this action to work, the 'downstream' repository must follow the same direct
 | `include-drafts` | no | `false` | If `true`, include draft PRs under each file in `ready_to_upstream.md`. |
 | `relevant-labels` | no | — | Comma- or newline-separated list of labels to classify PRs in `ready_to_upstream.md`. |
 | `branch-name` | no | `main` | Branch name used to build source links in the generated markdown. |
+| `search-root` | no | `<project-name>.Mathlib` | Namespace under which upstreaming candidates are located. Override this when your project uses a different convention, e.g. `MyProject.ToMathlib`. |
 
 ## Outputs
 This action does not define any outputs. It writes files to disk instead.
