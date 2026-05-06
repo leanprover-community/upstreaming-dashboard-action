@@ -26,6 +26,7 @@ async function main() {
   const repoUrlInput =
     (inputRepoUrl || '').trim();
   const projectName = inputProjectName.trim();
+  const searchRoot = (inputSearchRoot || '').trim();
   const relevantLabels = (inputRelevantLabels || '')
     .split(/[\n,]/)
     .map((label) => label.trim())
@@ -46,6 +47,7 @@ async function main() {
   console.log(`  RELEVANT-LABELS: ${inputRelevantLabels ?? ''}`);
   console.log('Using parameters:');
   console.log(`  Project name: ${projectName}`);
+  console.log(`  Search root: ${searchRoot || `${projectName}.Mathlib (default)`}`);
   console.log(`  Output directory: ${websiteDir}`);
   console.log(`  Including draft PRs: ${includeDrafts}`);
   console.log(`  Branch name: ${branchName}`);
@@ -58,7 +60,7 @@ async function main() {
 
   // 2. Build project file data
   console.log(`Building project file data for project: ${projectName}...`);
-  const projectFiles = collectProjectFilesData(prList, projectName);
+  const projectFiles = collectProjectFilesData(prList, projectName, searchRoot);
 
   // 3. Write output files
   fs.mkdirSync(websiteDir, { recursive: true });

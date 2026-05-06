@@ -52,6 +52,7 @@ Options:
   --branch-name NAME
   --repo-url URL
   --relevant-labels "label-a,label-b"
+  --search-root NAMESPACE
   --help
 `);
 }
@@ -111,6 +112,7 @@ const inputNames = [
   'branch-name',
   'repo-url',
   'relevant-labels',
+  'search-root',
 ];
 
 const tempWebsiteDirectory = fs.mkdtempSync(

@@ -5,15 +5,16 @@ const path = require('path');
 
 // Enumerate the *.lean files in the Mathlib directory
 // with the extra metadata that we care about
-function collectProjectFilesData(prList, projectName) {
-  // The project name with . replaced by path separators
-  // This will be treated relative to the current working directory, which
-  //  is assumed to be the repository root 
-  const projectRoot = path.join(...projectName.split('.'));
-  
-  // We will look for files under the Mathlib subdirectory, 
-  // which is where 'upstream' candidates are located
-  const searchRootNamespace = `${projectName}.Mathlib`;
+function collectProjectFilesData(prList, projectName, searchRootNamespaceOverride) {
+  // We look for files under the Mathlib subdirectory of the project by default,
+  // which is where 'upstream' candidates are conventionally located.
+  // Projects that use a different namespace (e.g. MyProject.ToMathlib) can
+  // override this via the searchRootNamespace argument.
+  // Paths are taken relative to the current working directory, which is assumed
+  // to be the repository root.
+  const searchRootNamespace =
+    (searchRootNamespaceOverride && searchRootNamespaceOverride.trim()) ||
+    `${projectName}.Mathlib`;
   const searchRoot = path.join(...searchRootNamespace.split('.'));
 
   const fileTouchedPr = {};
@@ -68,10 +69,13 @@ function collectProjectFilesData(prList, projectName) {
         continue;
       }
       const code = fs.readFileSync(fullPath, 'utf8');
-      
-      // Path relative to the project root, namely, a path of the form
-      // 'Mathlib/...', which will match the path in the data for a pull request to mathlib4
-      const file = path.relative(projectRoot, fullPath).split(path.sep).join('/');
+
+      // Path relative to the search root, e.g. 'A/B/C.lean'. We then prepend
+      // 'Mathlib/' to obtain the Mathlib path that PR data will use, e.g.
+      // 'Mathlib/A/B/C.lean'. This way the search root can live under any
+      // local namespace (Mathlib, ToMathlib, ...) and still match correctly.
+      const relInSearchRoot = path.relative(searchRoot, fullPath).split(path.sep).join('/');
+      const file = `Mathlib/${relInSearchRoot}`;
 
       projectFiles.push({
         path: fullPath,
