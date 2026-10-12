@@ -1,8 +1,7 @@
 'use strict';
 
-const QUEUEBOARD = "queueboard-backend-7f9cf5a8499a";
 const QUEUEBOARD_ENDPOINT =
-  `https://${QUEUEBOARD}.herokuapp.com/` +
+  'https://queueboard.mathlib.org/' +
   'api/v1/queueboard/snapshot' +
   '?repo=leanprover-community/mathlib4&rule_set_id=1';
 
